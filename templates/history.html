@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Prediction History</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+</head>
+<body class="bg-gray-50 min-h-screen">
+
+    <!-- Navbar -->
+    <nav class="bg-white shadow-sm">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16">
+                <div class="flex items-center">
+                    <span class="text-xl font-bold text-green-600">🌱 CarbonTrack</span>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <a href="/dashboard" class="text-gray-600 hover:text-green-600">Dashboard</a>
+                    <a href="/logout" class="text-gray-600 hover:text-green-600">Logout</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="max-w-7xl mx-auto py-8 px-4">
+        <h1 class="text-2xl font-bold text-gray-700 mb-6">Prediction History</h1>
+
+        <div class="overflow-x-auto bg-white rounded-lg shadow">
+            <table class="min-w-full divide-y divide-gray-200 text-sm text-gray-700">
+                <thead class="bg-gray-100">
+                    <tr>
+                        <th class="px-4 py-2 text-left font-semibold">Timestamp</th>
+                        <th class="px-4 py-2 text-left font-semibold">Industry</th>
+                        <th class="px-4 py-2 text-left font-semibold">Emission</th>
+                        <th class="px-4 py-2 text-left font-semibold">Energy</th>
+                        <th class="px-4 py-2 text-left font-semibold">Waste</th>
+                        <th class="px-4 py-2 text-left font-semibold">Water</th>
+                        <th class="px-4 py-2 text-left font-semibold">Area</th>
+                        <th class="px-4 py-2 text-left font-semibold">Prediction</th>
+                        <th class="px-4 py-2 text-left font-semibold">Actions</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-gray-200 bg-white">
+                    {% for row in history.itertuples() %}
+                    <tr>
+                        <td class="px-4 py-2">{{ row.timestamp }}</td>
+                        <td class="px-4 py-2">{{ row.industry }}</td>
+                        <td class="px-4 py-2">{{ row.emission_data }}</td>
+                        <td class="px-4 py-2">{{ row.energy_consumption }}</td>
+                        <td class="px-4 py-2">{{ row.waste_production }}</td>
+                        <td class="px-4 py-2">{{ row.water_consumption }}</td>
+                        <td class="px-4 py-2">{{ row.facility_size }}</td>
+                        <td class="px-4 py-2 font-semibold text-green-600">{{ row.prediction }}</td>
+                        <td class="px-4 py-2 space-x-2">
+                            <a href="{{ url_for('generate_pdf_report', prediction_id=row.timestamp) }}" class="text-blue-500 hover:underline">PDF</a>
+                            <a href="{{ url_for('email_results', prediction_id=row.timestamp) }}" class="text-purple-500 hover:underline">Email</a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        <!-- <div class="mt-6">
+            <a href="/dashboard" class="inline-block bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600">
+                ← Back to Dashboard
+            </a>
+        </div> -->
+    </div>
+
+</body>
+</html>

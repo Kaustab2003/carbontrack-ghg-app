@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Email Results</title>
+    <link rel="stylesheet" href="static/styles.css">
+</head>
+<body>
+    <h1>Email Prediction Results</h1>
+    <form method="POST">
+        <div class="form-group">
+            <label for="email">Recipient Email:</label>
+            <input type="email" name="email" id="email" required>
+        </div>
+        <input type="hidden" name="prediction_id" value="{{ prediction_id }}">
+        <button type="submit" class="btn btn-primary">Send Email</button>
+    </form>
+    <a href="/history" class="btn btn-secondary">Back to History</a>
+</body>
+</html>

@@ -1,0 +1,4 @@
+industry,emission_data,energy_consumption,waste_production,water_consumption,facility_size
+Manufacturing,100,3000,500,400,800
+Textile,90,2500,450,350,700
+Automobile,110,3200,600,420,850

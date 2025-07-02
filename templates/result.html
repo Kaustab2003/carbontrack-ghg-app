@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Prediction Result - CarbonTrack</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 700px;
+            margin: 0 auto;
+            padding: 2rem;
+            background-color: #f9f9f9;
+        }
+        .card {
+            background: white;
+            padding: 2rem;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+            text-align: center;
+        }
+        .value {
+            font-size: 2.5rem;
+            color: #4CAF50;
+            margin: 1rem 0;
+        }
+        .btn {
+            padding: 0.7rem 1.5rem;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            text-decoration: none;
+            font-weight: bold;
+            transition: background 0.3s ease;
+            display: inline-block;
+            margin: 10px 5px;
+        }
+        .btn:hover {
+            background-color: #45a049;
+        }
+        .btn-secondary {
+            background-color: #ffffff;
+            color: #4CAF50;
+            border: 2px solid #4CAF50;
+        }
+        .btn-secondary:hover {
+            background-color: #f0fdf4;
+        }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <h1>🌍 Emission Prediction Result</h1>
+        <p class="value">{{ prediction }} tons/year</p>
+        <p>This is your predicted annual greenhouse gas emissions.</p>
+        <a href="/" class="btn">🔙 Go Back</a>
+        <a href="{{ url_for('generate_pdf_report', prediction_id=prediction_id) }}" class="btn btn-secondary">📄 Generate PDF Report</a>
+    </div>
+</body>
+</html>

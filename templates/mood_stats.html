@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Community Mood Stats</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    body {
+      background: #121212;
+      color: #fff;
+      font-family: Arial, sans-serif;
+      padding: 30px;
+    }
+    h2 {
+      color: #00e676;
+    }
+    canvas {
+      max-width: 600px;
+      margin: 20px auto;
+      display: block;
+      background: #1e1e1e;
+      border-radius: 10px;
+      padding: 10px;
+    }
+    ul {
+      max-width: 600px;
+      margin: 20px auto;
+      padding: 0;
+      list-style: none;
+    }
+    li {
+      background: #2e2e2e;
+      margin: 6px 0;
+      padding: 10px;
+      border-radius: 6px;
+    }
+  </style>
+</head>
+<body>
+  <h2>🌍 Community Mood Statistics</h2>
+
+  <canvas id="moodChart"></canvas>
+
+  <ul>
+    {% for tip, count in tip_counts.items() %}
+      <li><strong>{{ tip }}</strong> — {{ count }} time(s)</li>
+    {% endfor %}
+  </ul>
+
+  <a href="/dashboard" style="color:#00e676;">🏠 Back to Dashboard</a>
+
+  <script>
+    const ctx = document.getElementById('moodChart').getContext('2d');
+    const chart = new Chart(ctx, {
+      type: 'pie',
+      data: {
+        labels: {{ mood_labels | tojson }},
+        datasets: [{
+          label: 'Mood Distribution',
+          data: {{ mood_values | tojson }},
+          backgroundColor: ['#00e676', '#ff9800', '#f44336']
+        }]
+      }
+    });
+  </script>
+</body>
+</html>

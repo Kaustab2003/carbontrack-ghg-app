@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>🧠 Mood History - GHG App</title>
+  <style>
+    body {
+      background-color: #121212;
+      color: #fff;
+      font-family: Arial, sans-serif;
+      padding: 40px;
+    }
+    h2 {
+      color: #00e676;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 20px;
+    }
+    th, td {
+      border: 1px solid #333;
+      padding: 12px;
+      text-align: center;
+    }
+    th {
+      background-color: #222;
+    }
+    tr:nth-child(even) {
+      background-color: #1e1e1e;
+    }
+    a {
+      color: #4db8ff;
+    }
+  </style>
+</head>
+<body>
+  <h2>🧠 Mood History Dashboard</h2>
+  <a href="/dashboard">🏠 Back to Dashboard</a>
+  <table>
+    <thead>
+      <tr>
+        <th>Timestamp</th>
+        <th>Industry</th>
+        <th>Prediction</th>
+        <th>Level</th>
+        <th>Mood</th>
+        <th>Tip</th>
+        <th>Points</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for row in entries %}
+      <tr>
+        <td>{{ row.Timestamp }}</td>
+        <td>{{ row.Industry }}</td>
+        <td>{{ row.Prediction }}</td>
+        <td>{{ row.Level }}</td>
+        <td>{{ row.Mood }}</td>
+        <td>{{ row.Tip }}</td>
+        <td>{{ row.Points }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</body>
+</html>

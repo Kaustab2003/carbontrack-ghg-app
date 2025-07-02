@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Batch Predictions | CarbonTrack</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body class="bg-gray-100">
+    <nav class="bg-white shadow-sm">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16">
+                <div class="flex items-center">
+                    <span class="text-xl font-bold text-green-600">🌱 CarbonTrack</span>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <a href="/dashboard" class="text-gray-600 hover:text-green-600">Dashboard</a>
+                    <a href="/logout" class="text-gray-600 hover:text-green-600">Logout</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <h1 class="text-3xl font-bold text-gray-800 mb-6">Batch Predictions</h1>
+        
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="mb-6 p-4 rounded-md {% if category == 'error' %}bg-red-100 text-red-700{% else %}bg-green-100 text-green-700{% endif %}">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+
+        <div class="bg-white p-6 rounded-lg shadow">
+            <h2 class="text-xl font-semibold text-gray-800 mb-4">Upload CSV File</h2>
+            <form method="POST" enctype="multipart/form-data" class="space-y-4">
+                <div>
+                    <label for="file" class="block text-sm font-medium text-gray-700 mb-1">Select CSV File</label>
+                    <input type="file" id="file" name="file" accept=".csv" required
+                        class="block w-full text-sm text-gray-500 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500">
+                </div>
+                <button type="submit" 
+                    class="w-full bg-green-600 text-white py-2 px-4 rounded-md hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 transition-colors">
+                    Upload and Predict
+                </button>
+            </form>
+
+            <!-- ✅ Download Sample + Required Columns -->
+            <div class="mt-4 text-sm text-gray-600">
+                Don't have a CSV? 
+                <a href="{{ url_for('static', filename='sample.csv') }}" class="text-blue-600 underline">
+                   Download Sample CSV
+                </a>
+            </div>
+
+            <!-- ✅ Required Columns Helper -->
+            <div class="mt-6 text-sm text-gray-600">
+                <p class="font-semibold">Required Columns:</p>
+                <ul class="list-disc list-inside text-gray-700">
+                    <li><code>industry</code></li>
+                    <li><code>emission_data</code></li>
+                    <li><code>energy_consumption</code></li>
+                    <li><code>waste_production</code></li>
+                    <li><code>water_consumption</code></li>
+                    <li><code>facility_size</code></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

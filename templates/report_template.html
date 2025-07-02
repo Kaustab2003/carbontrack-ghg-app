@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>GHG Emission Report</title>
+    <style>
+        body { font-family: Arial, sans-serif; }
+        h1 { text-align: center; }
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+        td, th { border: 1px solid #000; padding: 10px; }
+    </style>
+</head>
+<body>
+    <h1>Greenhouse Gas Emission Report</h1>
+    <table>
+        <tr><th>Industry</th><td>{{ industry }}</td></tr>
+        <tr><th>Substance Emission</th><td>{{ substance }}</td></tr>
+        <tr><th>Unit</th><td>{{ unit }}</td></tr>
+        <tr><th>Source</th><td>{{ source }}</td></tr>
+        <tr><th>Predicted Emission</th><td>{{ prediction }}</td></tr>
+        <tr><th>Emission Level</th><td>{{ level }}</td></tr>
+    </table>
+</body>
+</html>

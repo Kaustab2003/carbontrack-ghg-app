@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>📂 Upload CSV - GHG App</title>
+  <style>
+    body {
+      background-color: #121212;
+      color: #eee;
+      font-family: Arial, sans-serif;
+      padding: 40px;
+    }
+
+    h2 {
+      color: #00e676;
+      text-align: center;
+    }
+
+    form {
+      max-width: 500px;
+      margin: auto;
+      background-color: #1e1e1e;
+      padding: 20px;
+      border-radius: 10px;
+      text-align: center;
+    }
+
+    input[type="file"] {
+      margin: 15px 0;
+      background: #333;
+      padding: 10px;
+      color: white;
+      border: 1px solid #555;
+      border-radius: 6px;
+    }
+
+    button {
+      background-color: #4CAF50;
+      color: white;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+
+    a {
+      display: block;
+      text-align: center;
+      margin-top: 25px;
+      color: #4DB8FF;
+      text-decoration: none;
+    }
+  </style>
+</head>
+<body>
+
+  <h2>📂 Upload CSV for Batch Prediction</h2>
+
+  <form action="/batch_predict" method="POST" enctype="multipart/form-data">
+    <input type="file" name="csv_file" accept=".csv" required><br>
+    <button type="submit">🚀 Predict Emissions</button>
+  </form>
+
+  <a href="/dashboard">🏠 Back to Dashboard</a>
+
+</body>
+</html>

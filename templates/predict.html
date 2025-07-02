@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>GHG Emission Prediction</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        :root {
+            --bg-color: #ffffff;
+            --text-color: #333333;
+            --container-bg: #f5f5f5;
+            --border-color: #dddddd;
+            --primary-color: #4CAF50;
+            --divider-line: #dddddd;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 15px;
+        }
+
+        @media (max-width: 600px) {
+            body {
+                padding: 10px;
+            }
+            .form-container {
+                padding: 1.5rem;
+            }
+            .main-title {
+                font-size: 1.8rem;
+            }
+        }
+
+        .form-container {
+            background: var(--container-bg);
+            padding: 2.5rem;
+            border-radius: 16px;
+            box-shadow: 0 8px 30px rgba(0,0,0,0.08);
+            margin-top: 2rem;
+            border: 1px solid var(--border-color);
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+
+        input, select {
+            transition: all 0.3s ease;
+            border: 1px solid var(--border-color);
+            padding: 12px;
+            font-size: 16px;
+            width: 100%;
+        }
+
+        input:focus, select:focus {
+            border-color: var(--primary-color);
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(76, 175, 80, 0.2);
+        }
+
+        .btn-submit {
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            font-weight: bold;
+            padding: 10px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn-submit:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+
+        .btn-secondary {
+            background: white;
+            color: var(--primary-color);
+            border: 1px solid var(--primary-color);
+            padding: 10px 15px;
+            border-radius: 4px;
+            margin-left: 0.5rem;
+            cursor: pointer;
+        }
+
+        .btn-link {
+            color: #4CAF50;
+            text-decoration: none;
+            margin-left: 0.5rem;
+        }
+
+        .divider {
+            text-align: center;
+            position: relative;
+            margin: 20px 0;
+        }
+
+        .divider span {
+            background: var(--container-bg);
+            padding: 0 10px;
+            position: relative;
+        }
+
+        .divider:before {
+            content: "";
+            position: absolute;
+            top: 50%;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: var(--divider-line);
+            z-index: -1;
+        }
+
+        .main-nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 0;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .nav-brand {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: var(--primary-color);
+            transition: transform 0.3s ease;
+        }
+
+        .nav-brand:hover {
+            transform: scale(1.05);
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 1.5rem;
+            align-items: center;
+        }
+
+        .nav-links a {
+            padding: 0.5rem 0;
+            position: relative;
+            transition: color 0.3s ease;
+        }
+
+        .nav-links a:hover {
+            color: var(--primary-color);
+        }
+
+        .nav-links a:after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: 0;
+            left: 0;
+            background-color: var(--primary-color);
+            transition: width 0.3s ease;
+        }
+
+        .nav-links a:hover:after {
+            width: 100%;
+        }
+
+        .hero {
+            text-align: center;
+            margin: 3rem 0 2rem;
+            background: linear-gradient(135deg, rgba(76,175,80,0.1), rgba(76,175,80,0.05));
+            padding: 2rem;
+            border-radius: 12px;
+        }
+
+        .main-title {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .subtitle {
+            color: #666;
+            font-size: 1.1rem;
+        }
+
+        .error-message {
+            color: #c62828;
+            font-size: 0.8rem;
+            margin-top: 0.2rem;
+            min-height: 1rem;
+        }
+
+        .result-message {
+            padding: 1rem;
+            margin-top: 1rem;
+            border-radius: 4px;
+            display: none;
+        }
+
+        .result-success {
+            background-color: #e8f5e9;
+            color: #2e7d32;
+        }
+
+        .results-container {
+            margin-top: 2rem;
+            padding: 1.5rem;
+            background: var(--container-bg);
+            border-radius: 8px;
+        }
+
+        .result-card {
+            display: grid;
+            gap: 1rem;
+        }
+
+        .result-metric {
+            font-size: 1.1rem;
+        }
+
+        .metric-value {
+            font-weight: bold;
+            color: var(--primary-color);
+        }
+
+        .chart-container {
+            width: 100%;
+            max-width: 500px;
+            margin: 1.5rem auto;
+        }
+
+        .suggestions {
+            margin-top: 1.5rem;
+            padding: 1rem;
+            background: rgba(76, 175, 80, 0.1);
+            border-radius: 8px;
+            border-left: 4px solid var(--primary-color);
+        }
+    </style>
+</head>
+<body>
+    <!-- ✅ Tailwind-style Navbar -->
+    <header>
+        <nav class="main-nav">
+            <div class="nav-brand">🌱 CarbonTrack</div>
+            <div class="nav-links">
+                <a href="/dashboard">Dashboard</a>
+                <a href="/logout">Logout</a>
+            </div>
+        </nav>
+    </header>
+
+    <div class="hero">
+        <h1 class="main-title">GHG Emission Prediction</h1>
+        <p class="subtitle">Estimate your carbon footprint and get actionable insights</p>
+    </div>
+
+    <div class="form-container">
+        <form action="/predict" method="post" enctype="multipart/form-data">
+            <div class="form-group">
+                <label for="industry">Industry Type:</label>
+                <select name="industry" id="industry" required>
+                    <option value="">Select Industry</option>
+                    <option value="Manufacturing">Manufacturing</option>
+                    <option value="Energy">Energy Production</option>
+                    <option value="Transportation">Transportation</option>
+                    <option value="Agriculture">Agriculture</option>
+                    <option value="Construction">Construction</option>
+                    <option value="Waste Management">Waste Management</option>
+                    <option value="Healthcare">Healthcare</option>
+                    <option value="Retail">Retail</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="emission_data">CO₂ Emissions (tons/year):</label>
+                <input type="number" name="emission_data" id="emission_data" min="0" required>
+                <div class="error-message" id="emission_data_error"></div>
+            </div>
+
+            <div class="form-group">
+                <label for="energy_consumption">Energy Consumption (kWh):</label>
+                <input type="number" name="energy_consumption" id="energy_consumption" required>
+                <div class="error-message" id="energy_consumption_error"></div>
+            </div>
+
+            <div class="form-group">
+                <label for="waste_production">Waste Production (tons/year):</label>
+                <input type="number" name="waste_production" id="waste_production" required>
+                <div class="error-message" id="waste_production_error"></div>
+            </div>
+
+            <div class="form-group">
+                <label for="water_consumption">Water Consumption (m³/year):</label>
+                <input type="number" name="water_consumption" id="water_consumption" required>
+            </div>
+
+            <div class="form-group">
+                <label for="facility_size">Facility Size (sqm):</label>
+                <input type="number" name="facility_size" id="facility_size" min="100" required>
+            </div>
+
+            <div class="form-group">
+                <button type="submit" class="btn-submit">Calculate Emission Impact</button>
+                <button type="button" class="btn-secondary" id="generate-pdf">📄 Generate PDF Report</button>
+                <a href="{{ url_for('static', filename='sample.csv') }}" class="btn-link">Download Template</a>
+            </div>
+
+            <div class="form-group divider"><span>OR</span></div>
+
+            <div class="form-group upload-section">
+                <label class="upload-label" id="drop-zone">
+                    <span id="file-label">Choose or Drag & Drop CSV File</span>
+                    <input type="file" name="csv_upload" accept=".csv" class="file-input" id="file-input">
+                </label>
+                <small class="help-text">Supports files up to 5MB</small>
+            </div>
+        </form>
+
+        <div id="result-message" class="result-message"></div>
+        <div id="results-container" class="results-container" style="display:none">
+            <h3>Your Emission Results</h3>
+            <div class="result-card">
+                <div class="result-metric">
+                    <span class="metric-label">Total CO₂ Emissions:</span>
+                    <span class="metric-value" id="result-emissions">0</span> tons/year
+                </div>
+                <div class="result-metric">
+                    <span class="metric-label">Carbon Intensity:</span>
+                    <span class="metric-value" id="result-intensity">0</span> kg/sqm
+                </div>
+                <div class="chart-container">
+                    <canvas id="emissionChart"></canvas>
+                </div>
+                <div class="suggestions" id="suggestions"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Your form validation and JS logic can go here
+        document.getElementById('generate-pdf').addEventListener('click', function () {
+            const msg = document.getElementById('result-message');
+            msg.textContent = 'Generating PDF report...';
+            msg.className = 'result-message result-success';
+            msg.style.display = 'block';
+        });
+    </script>
+</body>
+</html>
