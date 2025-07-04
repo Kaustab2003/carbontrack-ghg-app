@@ -14,6 +14,9 @@ from email.mime.application import MIMEApplication
 import smtplib
 from fpdf import FPDF
 from flask_sqlalchemy import SQLAlchemy
+from utils.pdf_utils import generate_pdf
+
+
 
 app = Flask(__name__)
 app.secret_key = os.getenv('SECRET_KEY', 'your_secret_key_here')
@@ -38,6 +41,7 @@ class History(db.Model):
     timestamp = db.Column(db.String(50))
     username = db.Column(db.String(80))
     industry = db.Column(db.String(100))
+    emission_type = db.Column(db.String(50)) 
     emission_data = db.Column(db.Float)
     energy_consumption = db.Column(db.Float)
     waste_production = db.Column(db.Float)
@@ -61,6 +65,7 @@ def save_prediction(username, data):
         timestamp=data['timestamp'],
         username=username,
         industry=data['industry'],
+        emission_type=data.get("emission_type", "carbon_dioxide"),
         emission_data=data['emission_data'],
         energy_consumption=data['energy_consumption'],
         waste_production=data['waste_production'],
@@ -71,8 +76,21 @@ def save_prediction(username, data):
     db.session.add(record)
     db.session.commit()
 
+
 def get_user_history(username):
-    return pd.DataFrame([r.__dict__ for r in History.query.filter_by(username=username).all() if '_sa_instance_state' in r.__dict__ and r.__dict__.pop('_sa_instance_state', None) is not None])
+    records = History.query.filter_by(username=username).all()
+    return pd.DataFrame([{
+        'timestamp': r.timestamp,
+        'industry': r.industry,
+        'emission_type': r.emission_type,
+        'emission_data': r.emission_data,
+        'energy_consumption': r.energy_consumption,
+        'waste_production': r.waste_production,
+        'water_consumption': r.water_consumption,
+        'facility_size': r.facility_size,
+        'prediction': r.prediction
+    } for r in records])
+
 
 
 # Step 3: Use SQLAlchemy DB for user registration/login
@@ -84,6 +102,34 @@ def create_user(username, password, email):
     user = User(username=username, password=hashed_pw, email=email)
     db.session.add(user)
     db.session.commit()
+
+def generate_pdf(data):
+    pdf = FPDF()
+    pdf.add_page()
+    pdf.set_font("Arial", size=12)
+    
+    pdf.set_fill_color(30, 30, 30)
+    pdf.set_text_color(0, 255, 0)
+    pdf.cell(200, 10, txt=" GHG Emission Prediction Report", ln=True, align='C')
+    
+    pdf.set_text_color(0, 0, 0)
+    pdf.set_font("Arial", size=11)
+    pdf.ln(10)
+
+    for key, value in data.items():
+        label = key.replace("_", " ").title()
+        pdf.cell(200, 10, txt=f"{label}: {value}", ln=True)
+
+    pdf.set_font("Arial", size=10)
+    pdf.set_text_color(180, 180, 180)
+    pdf.ln(5)
+    pdf.cell(0, 10, f"Generated on: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}", ln=True)
+
+    # ✔️ Use dest='S' to output as string, then encode and wrap in BytesIO
+    buffer = BytesIO()
+    pdf.output(buffer, dest='F')  # 'F' writes to file-like object
+    buffer.seek(0)
+    return buffer
 
 ...
 
@@ -110,6 +156,7 @@ def predict():
         feature_names = joblib.load("model/feature_names.pkl")
 
         industry = request.form.get("industry", "Manufacturing")
+        emission_type = request.form.get("emission_type", "carbon_dioxide")
         emission_data = float(request.form["emission_data"])
         energy = float(request.form["energy_consumption"])
         waste = float(request.form["waste_production"])
@@ -125,6 +172,7 @@ def predict():
         if "username" in session:
             save_prediction(session["username"], {
                 "industry": industry,
+                "emission_type": emission_type,
                 "emission_data": emission_data,
                 "energy_consumption": energy,
                 "waste_production": waste,
@@ -137,22 +185,40 @@ def predict():
 
         return render_template("result.html", 
                                prediction=round(prediction, 2), 
-                               prediction_id=prediction_id)
+                               emission_data=emission_data,
+                               prediction_id=prediction_id,
+                               emission_type=emission_type)
     except Exception as e:
         return f"An error occurred: {e}"
 
 @app.route('/generate_pdf/<prediction_id>')
 def generate_pdf_report(prediction_id):
+    if 'username' not in session:
+        flash("You must be logged in to generate PDF reports.")
+        return redirect(url_for('login'))
+
     try:
         history = get_user_history(session['username'])
+        
+        print("Raw user history:", history) 
         match = history[history['timestamp'] == prediction_id]
         if match.empty:
             return "Prediction not found.", 404
+
         prediction_data = match.iloc[0].to_dict()
+        print("Prediction data to be used in PDF:", prediction_data)
+        print("Prediction data to be used in PDF:", prediction_data)
         pdf_stream = generate_pdf(prediction_data)
         return send_file(pdf_stream, mimetype='application/pdf', as_attachment=True, download_name='prediction_report.pdf')
+
     except Exception as e:
+        print("PDF generation error:", str(e)) 
         return f"An error occurred while generating PDF: {e}", 500
+
+
+
+
+
 
 @app.route('/email_results/<prediction_id>', methods=['GET', 'POST'])
 def email_results(prediction_id):
@@ -249,6 +315,7 @@ def view_history():
     history = pd.DataFrame([{
         'timestamp': r.timestamp,
         'industry': r.industry,
+        'emission_type': r.emission_type,
         'emission_data': r.emission_data,
         'energy_consumption': r.energy_consumption,
         'waste_production': r.waste_production,

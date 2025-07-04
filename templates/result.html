@@ -51,10 +51,23 @@
 <body>
     <div class="card">
         <h1>🌍 Emission Prediction Result</h1>
+        <p><strong>Reported Emissions:</strong> {{ emission_data }} tons/year</p>
+        <p><strong>Predicted Emissions:</strong></p>
         <p class="value">{{ prediction }} tons/year</p>
-        <p>This is your predicted annual greenhouse gas emissions.</p>
+<p>This is your predicted annual greenhouse gas emissions.</p>
+
+{% if emission_type %}
+    <p><strong>Emission Type:</strong> 
+        {{ emission_type.replace("_", " ").title() }}
+    </p>
+{% endif %}
+
         <a href="/" class="btn">🔙 Go Back</a>
-        <a href="{{ url_for('generate_pdf_report', prediction_id=prediction_id) }}" class="btn btn-secondary">📄 Generate PDF Report</a>
+        <a href="{{ url_for('generate_pdf_report', prediction_id=prediction_id) }}" class="btn btn-primary">
+    📄 Download PDF
+</a>
+
+
     </div>
 </body>
 </html>

@@ -278,12 +278,41 @@
                 </select>
             </div>
 
-            <div class="form-group">
-                <label for="emission_data">CO₂ Emissions (tons/year):</label>
-                <input type="number" name="emission_data" id="emission_data" min="0" required>
-                <div class="error-message" id="emission_data_error"></div>
-            </div>
+          <!-- Emissions Type Dropdown -->
+<div class="mb-4">
+  <label for="emission_type" class="block text-gray-700 font-semibold mb-1">
+    Emissions Type (tons/year):
+    <span class="help-icon" title="Select the greenhouse gas type you're reporting for estimation">ℹ️</span>
+  </label>
+  <select id="emission_type" name="emission_type" class="w-full p-2 border border-gray-300 rounded">
+    <option value="carbon_dioxide">Carbon Dioxide</option>
+    <option value="methane">Methane</option>
+    <option value="nitrous_oxide">Nitrous Oxide</option>
+    <option value="other_ghg">Other GHGs</option>
+  </select>
+</div>
 
+<!-- Emission Data Input -->
+<div class="mb-4">
+  <label for="emission_data" class="block text-gray-700 font-semibold mb-1">
+    Emissions Amount (tons/year):
+    <span class="help-icon" title="Typically ranges from 10 tons (small business) to 10,000+ tons (large industrial)">ℹ️</span>
+  </label>
+  <input type="number" step="any" id="emission_data" name="emission_data" class="w-full p-2 border border-gray-300 rounded" placeholder="Enter total GHG emissions">
+  <small class="help-text text-gray-500">Enter your annual CO₂ equivalent emissions in metric tons.</small>
+  <div class="error-message text-red-500 text-sm mt-1" id="emission_error"></div>
+</div>
+
+
+<div class="form-group">
+    <label for="emission_data">
+        Emissions Quantity (tons/year):
+        <span class="help-icon" title="Typically ranges from 10 tons (small business) to 10,000+ tons (large industrial)">ℹ️</span>
+    </label>
+    <input type="number" name="emission_data" id="emission_data" min="0" required>
+    <small class="help-text">Enter your annual GHG emissions in metric tons</small>
+    <div class="error-message" id="emission_error"></div>
+</div>
             <div class="form-group">
                 <label for="energy_consumption">Energy Consumption (kWh):</label>
                 <input type="number" name="energy_consumption" id="energy_consumption" required>

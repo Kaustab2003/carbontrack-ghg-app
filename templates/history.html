@@ -32,6 +32,8 @@
                     <tr>
                         <th class="px-4 py-2 text-left font-semibold">Timestamp</th>
                         <th class="px-4 py-2 text-left font-semibold">Industry</th>
+                        <th class="px-4 py-2 text-left font-semibold">Emission Type</th>
+
                         <th class="px-4 py-2 text-left font-semibold">Emission</th>
                         <th class="px-4 py-2 text-left font-semibold">Energy</th>
                         <th class="px-4 py-2 text-left font-semibold">Waste</th>
@@ -46,6 +48,9 @@
                     <tr>
                         <td class="px-4 py-2">{{ row.timestamp }}</td>
                         <td class="px-4 py-2">{{ row.industry }}</td>
+                        <td class="border px-4 py-2">{{ row['emission_type'].replace("_", " ").title() }}</td>
+
+
                         <td class="px-4 py-2">{{ row.emission_data }}</td>
                         <td class="px-4 py-2">{{ row.energy_consumption }}</td>
                         <td class="px-4 py-2">{{ row.waste_production }}</td>
