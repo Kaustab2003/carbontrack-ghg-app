@@ -1,3 +1,4 @@
+
 # CarbonTrack - GHG Emission Prediction App
 
 A Flask application for predicting and tracking greenhouse gas emissions.
@@ -21,3 +22,6 @@ A Flask application for predicting and tracking greenhouse gas emissions.
 3. Install dependencies:
    ```bash
    pip install -r requirements.txt# CarbonTracker
+=======
+# carbontrack-ghg-app
+>>>>>>> 6b9149d62ad860db531ea81664836c1b02c24c3f
