@@ -1,11 +1,11 @@
 Flask
+gunicorn
 pandas
 joblib
 scikit-learn
 flask_sqlalchemy
-Werkzeug
-flask_caching
+Flask-Caching
 pyotp
 itsdangerous
-fpdf
 python-dotenv
+fpdf
